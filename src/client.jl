@@ -201,7 +201,7 @@ function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}};
                 end
 
                 flow = InstalledAppFlow.from_client_secrets_file(credentialsFile, scopeUrls)
-                creds = flow.run_local_server(port=0)
+                creds = flow.run_console()
             end
 
             # Save the credentials for the next run
