@@ -171,7 +171,7 @@ function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}};
     pickle = pyimport("pickle")
     os_path = pyimport("os.path")
     build = pyimport("googleapiclient.discovery").build
-    service_account = pyimport("google.oauth2").service_account
+    service_account = pyimport("google.oauth2.service_account")
     Request = pyimport("google.auth.transport.requests").Request
     open = pybuiltin("open")
 
