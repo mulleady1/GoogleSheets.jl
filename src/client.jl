@@ -30,7 +30,7 @@ Update the default rate limiter.
 """
 function update_default_rate_limiter(rate_limiter_tokens_per_sec::Float64; rate_limiter_max_tokens::Float64=5)
     global default_rate_limiter_read = TokenBucketRateLimiter(rate_limiter_tokens_per_sec, rate_limiter_max_tokens, rate_limiter_max_tokens)
-    global default_rate_limiter_write = TokenBucketRateLimiter(rate_limiter_tokens_per_sec, rate_limiter_max_tokens, rate_limiter_max_tokens)    
+    global default_rate_limiter_write = TokenBucketRateLimiter(rate_limiter_tokens_per_sec, rate_limiter_max_tokens, rate_limiter_max_tokens)
 end
 
 
@@ -120,7 +120,7 @@ function credentials_file()::String
         return ENV["GOOGLE_SHEETS_CREDENTIALS"]
     end
 
-    file = "credentials.json"
+    file = "servicecredentials.json"
     return joinpath(config_dir, file)
 end
 
@@ -164,14 +164,14 @@ Creates a client for accessing Google Sheets.
 - `rate_limiter_read::AbstractRateLimiter=default_rate_limiter_read`: rate limiter for reading.
 - `rate_limiter_write::AbstractRateLimiter=default_rate_limiter_write`: rate limiter for writing.
 """
-function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}}; 
-        rate_limiter_read::AbstractRateLimiter=default_rate_limiter_read, 
-        rate_limiter_write::AbstractRateLimiter=default_rate_limiter_write)::GoogleSheetsClient
+function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}};
+    rate_limiter_read::AbstractRateLimiter=default_rate_limiter_read,
+    rate_limiter_write::AbstractRateLimiter=default_rate_limiter_write)::GoogleSheetsClient
 
     pickle = pyimport("pickle")
     os_path = pyimport("os.path")
     build = pyimport("googleapiclient.discovery").build
-    InstalledAppFlow = pyimport("google_auth_oauthlib.flow").InstalledAppFlow
+    service_account = pyimport("google.oauth2").service_account
     Request = pyimport("google.auth.transport.requests").Request
     open = pybuiltin("open")
 
@@ -200,8 +200,7 @@ function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}};
                     error("Credentials file not found: $credentialsFile")
                 end
 
-                flow = InstalledAppFlow.from_client_secrets_file(credentialsFile, scopeUrls)
-                creds = flow.run_console()
+                creds = service_account.Credentials.from_service_account_file(credentialsFile, scopeUrls)
             end
 
             # Save the credentials for the next run
