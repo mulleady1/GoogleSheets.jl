@@ -76,7 +76,7 @@ end
 """
 Directory containing configuration files.
 """
-config_dir = joinpath(homedir(),".julia/config/google_sheets/")
+config_dir = joinpath(homedir(), ".julia/config/google_sheets/")
 
 
 const _permission_urls = Dict(
@@ -200,7 +200,7 @@ function sheets_client(scopes::Union{AuthScope,Array{AuthScope,1}};
                     error("Credentials file not found: $credentialsFile")
                 end
 
-                creds = service_account.Credentials.from_service_account_file(credentialsFile, scopeUrls)
+                creds = service_account.Credentials.from_service_account_file(credentialsFile)
             end
 
             # Save the credentials for the next run
@@ -225,7 +225,7 @@ GoogleSheets spreadsheet-get API.
 """
 function gsheet_api_spreadsheet_get(client::GoogleSheetsClient; kwargs...)
     @rate_limit client.rate_limiter_read 1 @_print_python_exception begin
-        return client.client.spreadsheets().get(;kwargs...).execute()
+        return client.client.spreadsheets().get(; kwargs...).execute()
     end
 end
 
@@ -241,7 +241,7 @@ GoogleSheets sheet-get API.
 """
 function gsheet_api_sheet_get(client::GoogleSheetsClient; kwargs...)
     @rate_limit client.rate_limiter_read 1 @_print_python_exception begin
-        return client.client.spreadsheets().values().get(;kwargs...).execute()
+        return client.client.spreadsheets().values().get(; kwargs...).execute()
     end
 end
 
@@ -257,7 +257,7 @@ GoogleSheets sheet-batchGet API.
 """
 function gsheet_api_sheet_batchget(client::GoogleSheetsClient; kwargs...)
     @rate_limit client.rate_limiter_read 1 @_print_python_exception begin
-        return client.client.spreadsheets().values().batchGet(;kwargs...).execute()
+        return client.client.spreadsheets().values().batchGet(; kwargs...).execute()
     end
 end
 
@@ -273,7 +273,7 @@ GoogleSheets sheet-update API.
 """
 function gsheet_api_sheet_update(client::GoogleSheetsClient; kwargs...)
     @rate_limit client.rate_limiter_write 1 @_print_python_exception begin
-        return client.client.spreadsheets().values().update(;kwargs...).execute()
+        return client.client.spreadsheets().values().update(; kwargs...).execute()
     end
 end
 
@@ -289,7 +289,7 @@ GoogleSheets spreadsheet-batchUpdate API.
 """
 function gsheet_api_speadsheet_batchupdate(client::GoogleSheetsClient; kwargs...)
     @rate_limit client.rate_limiter_write 1 @_print_python_exception begin
-        return client.client.spreadsheets().batchUpdate(;kwargs...).execute()
+        return client.client.spreadsheets().batchUpdate(; kwargs...).execute()
     end
 end
 
